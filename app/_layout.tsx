@@ -4,9 +4,10 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-// import "react-native-reanimated";
+import * as SystemUI from "expo-system-ui";
+import "react-native-reanimated";
+import Colors from "@/constants/Colors";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -18,6 +19,8 @@ export default function RootLayout() {
     if (loaded) {
       SplashScreen.hideAsync();
     }
+
+    SystemUI.setBackgroundColorAsync(Colors.dark.background);
   }, [loaded]);
 
   if (!loaded) {
@@ -27,7 +30,14 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={DarkTheme}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="(tabs)"
+          options={{
+            headerShown: false,
+            autoHideHomeIndicator: true,
+            keyboardHandlingEnabled: true,
+          }}
+        />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

@@ -1,18 +1,7 @@
 import { RenderHistoryItem } from "@/components/RenderHistory";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import Animated, {
-  useAnimatedStyle,
-  withTiming,
-} from "react-native-reanimated";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 export interface DownloadHistoryItem {
   id: string;
@@ -64,86 +53,14 @@ export default function HistoryScreen() {
     {}
   );
 
-  const renderHistoryItem = ({ item }: { item: DownloadHistoryItem }) => {
-    const isExpanded = expandedItemId === item.id;
-    const opacity = itemOpacities[item.id] || 1;
-
-    const animatedStyle = useAnimatedStyle(() => ({
-      opacity: withTiming(opacity),
-    }));
-
-    const toggleExpand = () => {
-      setItemOpacities((prev) => ({
-        ...prev,
-        [item.id]: 0.7,
-      }));
-      setExpandedItemId(isExpanded ? null : item.id);
-    };
-
-    return (
-      <Animated.View
-        style={[
-          styles.historyItemContainer,
-          isExpanded && styles.expandedItem,
-          animatedStyle,
-        ]}
-      >
-        <TouchableOpacity
-          style={styles.historyItemHeader}
-          onPress={toggleExpand}
-        >
-          <Image
-            source={{ uri: item.thumbnail }}
-            style={styles.thumbnailImage}
-          />
-          <View style={styles.historyItemDetails}>
-            <Text style={styles.historyItemTitle} numberOfLines={1}>
-              {item.fileName}
-            </Text>
-            <View style={styles.historyItemSubtitle}>
-              <Text style={styles.platformText}>{item.platform}</Text>
-              <Text style={styles.dateText}>{item.date}</Text>
-            </View>
-          </View>
-          <Ionicons
-            name={isExpanded ? "chevron-up" : "chevron-down"}
-            size={24}
-            color="white"
-          />
-        </TouchableOpacity>
-
-        {isExpanded && (
-          <View style={styles.expandedDetails}>
-            <View style={styles.detailRow}>
-              <Ionicons name="link" size={18} color="white" />
-              <Text style={styles.detailText} numberOfLines={1}>
-                {item.url}
-              </Text>
-            </View>
-            <View style={styles.detailRow}>
-              <Ionicons name="film" size={18} color="white" />
-              <Text style={styles.detailText}>
-                {item.quality} • {item.fileSize}
-              </Text>
-            </View>
-            <TouchableOpacity style={styles.redownloadButton}>
-              <Ionicons name="download" size={18} color="white" />
-              <Text style={styles.redownloadText}>Re-download</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </Animated.View>
-    );
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.title}>Download History</Text>
-        <TouchableOpacity style={styles.clearButton}>
+        <Pressable style={styles.clearButton}>
           <Ionicons name="trash" size={20} color="white" />
           <Text style={styles.clearButtonText}>Clear All</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
       <FlatList
         data={mockDownloadHistory}
@@ -201,75 +118,6 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingHorizontal: 20,
-  },
-  historyItemContainer: {
-    backgroundColor: "rgba(30,30,30,0.8)",
-    borderRadius: 15,
-    marginBottom: 15,
-    overflow: "hidden",
-  },
-  expandedItem: {
-    backgroundColor: "rgba(50,50,50,0.9)",
-  },
-  historyItemHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 15,
-  },
-  thumbnailImage: {
-    width: 80,
-    height: 50,
-    borderRadius: 10,
-    marginRight: 15,
-  },
-  historyItemDetails: {
-    flex: 1,
-  },
-  historyItemTitle: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  historyItemSubtitle: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 5,
-  },
-  platformText: {
-    color: "rgba(255,255,255,0.7)",
-    fontSize: 12,
-  },
-  dateText: {
-    color: "rgba(255,255,255,0.5)",
-    fontSize: 12,
-  },
-  expandedDetails: {
-    padding: 15,
-    backgroundColor: "rgba(40,40,40,0.9)",
-  },
-  detailRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  detailText: {
-    color: "white",
-    marginLeft: 10,
-    flex: 1,
-  },
-  redownloadButton: {
-    flexDirection: "row",
-    backgroundColor: "#4A148C",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 12,
-    borderRadius: 25,
-    marginTop: 10,
-  },
-  redownloadText: {
-    color: "white",
-    marginLeft: 10,
-    fontWeight: "bold",
   },
   emptyText: {
     textAlign: "center",

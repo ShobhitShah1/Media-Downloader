@@ -1,11 +1,12 @@
+import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useCallback, useState } from "react";
 import {
   Image,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 import Animated, {
@@ -88,7 +89,7 @@ export default function MediaDownloaderScreen() {
   }, [url]);
 
   const inputAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: inputScale.value }],
+    // transform: [{ scale: inputScale.value }],
   }));
 
   const mediaCardAnimatedStyle = useAnimatedStyle(() => ({
@@ -122,8 +123,9 @@ export default function MediaDownloaderScreen() {
           style={styles.input}
           multiline
           onSubmitEditing={handleSubmit}
+          selectionColor={Colors.dark.text}
         />
-        <TouchableOpacity
+        <Pressable
           style={styles.submitButton}
           onPress={handleSubmit}
           disabled={isLoading}
@@ -133,7 +135,7 @@ export default function MediaDownloaderScreen() {
             size={24}
             color="white"
           />
-        </TouchableOpacity>
+        </Pressable>
       </Animated.View>
 
       {mediaInfo && (
@@ -146,23 +148,23 @@ export default function MediaDownloaderScreen() {
 
           <View style={styles.qualityContainer}>
             {mediaInfo.qualities.map((quality) => (
-              <TouchableOpacity
-                key={quality.label}
+              <Pressable
+                key={quality?.label}
                 style={[
                   styles.qualityButton,
-                  selectedQuality === quality.label && {
-                    backgroundColor: quality.color,
+                  selectedQuality === quality?.label && {
+                    backgroundColor: quality?.color,
                   },
                 ]}
-                onPress={() => setSelectedQuality(quality.label)}
+                onPress={() => setSelectedQuality(quality?.label)}
               >
-                <Text style={styles.qualityLabel}>{quality.label}</Text>
-                <Text style={styles.qualitySize}>{quality.size}</Text>
-              </TouchableOpacity>
+                <Text style={styles.qualityLabel}>{quality?.label}</Text>
+                <Text style={styles.qualitySize}>{quality?.size}</Text>
+              </Pressable>
             ))}
           </View>
 
-          <TouchableOpacity
+          <Pressable
             style={[
               styles.downloadButton,
               !selectedQuality && styles.disabledButton,
@@ -171,7 +173,7 @@ export default function MediaDownloaderScreen() {
           >
             <Ionicons name="download" size={24} color="white" />
             <Text style={styles.downloadText}>Download</Text>
-          </TouchableOpacity>
+          </Pressable>
         </Animated.View>
       )}
     </View>
