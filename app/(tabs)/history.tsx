@@ -1,7 +1,7 @@
 import { RenderHistoryItem } from "@/components/RenderHistory";
-import { Ionicons } from "@expo/vector-icons";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import React, { useState } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
 export interface DownloadHistoryItem {
   id: string;
@@ -14,54 +14,28 @@ export interface DownloadHistoryItem {
   quality: string;
 }
 
-const mockDownloadHistory: DownloadHistoryItem[] = [
-  {
-    id: "1",
-    url: "https://youtube.com/watch?v=dQw4w9WgXcQ",
-    date: "2024-01-25",
-    thumbnail: "https://picsum.photos/200/120?random=1",
-    platform: "YouTube",
-    fileName: "Rick Astley - Never Gonna Give You Up.mp4",
-    fileSize: "45 MB",
-    quality: "720p",
-  },
-  {
-    id: "2",
-    url: "https://instagram.com/p/example-post",
-    date: "2024-01-24",
-    thumbnail: "https://picsum.photos/200/120?random=2",
-    platform: "Instagram",
-    fileName: "Trending Instagram Reel.mp4",
-    fileSize: "35 MB",
-    quality: "1080p",
-  },
-  {
-    id: "3",
-    url: "https://vimeo.com/video/example",
-    date: "2024-01-23",
-    thumbnail: "https://picsum.photos/200/120?random=3",
-    platform: "Vimeo",
-    fileName: "Creative Short Film.mp4",
-    fileSize: "85 MB",
-    quality: "4K",
-  },
-];
+const mockDownloadHistory: DownloadHistoryItem[] = Array.from(
+  { length: 20 },
+  (_, i) => {
+    return {
+      id: i?.toString(),
+      url: "https://youtube.com/watch?v=dQw4w9WgXcQ",
+      date: "2024-01-25",
+      thumbnail: "https://picsum.photos/200/120?random=1",
+      platform: "YouTube",
+      fileName: "Rick Astley - Never Gonna Give You Up.mp4",
+      fileSize: "45 MB",
+      quality: "720p",
+    };
+  }
+);
 
 export default function HistoryScreen() {
+  const height = useBottomTabBarHeight();
   const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
-  const [itemOpacities, setItemOpacities] = useState<{ [key: string]: number }>(
-    {}
-  );
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.title}>Download History</Text>
-        <Pressable style={styles.clearButton}>
-          <Ionicons name="trash" size={20} color="white" />
-          <Text style={styles.clearButtonText}>Clear All</Text>
-        </Pressable>
-      </View>
       <FlatList
         data={mockDownloadHistory}
         renderItem={({ item }) => {
@@ -69,9 +43,7 @@ export default function HistoryScreen() {
             <RenderHistoryItem
               item={item}
               expandedItemId={expandedItemId}
-              itemOpacities={itemOpacities}
               setExpandedItemId={setExpandedItemId}
-              setItemOpacities={setItemOpacities}
               key={item.id}
             />
           );
@@ -80,7 +52,10 @@ export default function HistoryScreen() {
         ListEmptyComponent={
           <Text style={styles.emptyText}>No download history</Text>
         }
-        contentContainerStyle={styles.listContainer}
+        contentContainerStyle={[
+          styles.listContainer,
+          { paddingBottom: height, paddingTop: 110 },
+        ]}
       />
     </View>
   );
@@ -90,7 +65,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#121212",
-    paddingTop: 50,
+    // paddingTop: 50,
   },
   headerContainer: {
     flexDirection: "row",
